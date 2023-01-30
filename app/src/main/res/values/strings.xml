@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">FirebaseAuthentication</string>
+    <string name="mail_address">Mail address</string>
+    <string name="password">Password</string>
+    <string name="create_account">Create account</string>
+    <string name="login">Login</string>
+    <string name="password_weak">Password too weak</string>
+    <string name="invalid_mail">Invalid email</string>
+    <string name="password_used">Password already used</string>
+    <string name="others">Unknown error</string>
+    <string name="email_used">Email already in use</string>
+    <string name="no_such_account">No account with this email.</string>
+    <string name="network_not_available">Network is not available</string>
+    <string name="empty_email">Empty email</string>
+    <string name="empty_password">Empty password</string>
+    <string name="successful_login">You\'re  connected successfully</string>
+    <string name="successful">You\'re connected successfully</string>
+    <string name="incorrect_email_or_password">Incorrect email or password</string>
+    <string name="click_on_login">You can click on login if you want to login</string>
+</resources>
