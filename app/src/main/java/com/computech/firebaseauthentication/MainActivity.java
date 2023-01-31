@@ -1,12 +1,18 @@
 package com.computech.firebaseauthentication;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,14 +27,24 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 	private FirebaseAuth mAuth;
+	Uri photoUrl;
 	private EditText email,password;
+	ActionBar actionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		 actionBar = getSupportActionBar();
+// showing the back button in action bar
+		assert actionBar != null;
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+
 		findViewById(R.id.login).setOnClickListener(this);
 				findViewById(R.id.create_account).setOnClickListener(this);
+		findViewById(R.id.forgotten_password).setOnClickListener(this);
 
 		email=findViewById(R.id.mail);
 		password=findViewById(R.id.password);
@@ -36,8 +52,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		mAuth = FirebaseAuth.getInstance();
 
 
+
 	}
-private void login(@NonNull String email, @NonNull String password){
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu,menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@SuppressLint("NonConstantResourceId")
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		switch (item.getItemId())
+		{
+		case  R.id.setting:
+			startActivity(new Intent(this,Settings.class));
+			break;
+			case android.R.id.home:
+				onBackPressed();
+			default:
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void login(@NonNull String email, @NonNull String password){
 
 	if(email.equals(""))
 
@@ -61,24 +101,26 @@ private void login(@NonNull String email, @NonNull String password){
 				 if (task.isSuccessful()) {
 					// Sign in success, update UI with the signed-in user's information
 
-					FirebaseUser user = mAuth.getCurrentUser();
-
-					 // Name, email address, and profile photo Url
-					 assert user != null;
-					 String name = user.getDisplayName();
-					 String mailAddress= user.getEmail();
-					 Uri photoUrl = user.getPhotoUrl();
-
-					 // Check if user's email is verified
-					 boolean emailVerified = user.isEmailVerified();
-
+               FirebaseUser user=mAuth.getCurrentUser();
 
 					 Toast.makeText(MainActivity.this,
 								 getString(R.string.successful)
 								 ,
 								 Toast.LENGTH_SHORT).show();
-					//updateUI(user);
-				} else {
+					 /*assert user != null;
+					 photoUrl = user.getPhotoUrl();
+					 try {
+						 InputStream inputStream = getContentResolver().
+								 openInputStream(photoUrl);
+						 Drawable drawable = Drawable.createFromStream
+								 (inputStream, photoUrl.toString());
+						 actionBar.setLogo(drawable);
+					 } catch (FileNotFoundException e) {
+						 e.printStackTrace();
+					 }
+*/
+
+				 } else {
 					// If sign in fails, display a message to the user.
 
 					Exception exception = task.getException();
@@ -119,6 +161,8 @@ private void login(@NonNull String email, @NonNull String password){
 			});
 
 }
+
+
 	private void createAccount(@NonNull String email, @NonNull String password)
 	{
 
@@ -208,6 +252,9 @@ if(v.getId()==R.id.create_account)
 else  if(v.getId()==R.id.login)
 	login(email.getText().toString().trim(),
 			password.getText().toString().trim());
+else if(v.getId()==R.id.forgotten_password)
+	startActivity(new Intent(this,ResetPassword.class));
+
 
 
 	}
